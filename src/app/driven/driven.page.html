@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Formulario Template-Driven</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form #formularioDriven="ngForm" (ngSubmit)="onSubmit(formularioDriven)">
+    <ion-list lines="full">
+
+      <ion-item>
+        <ion-input
+          label="Nombre completo"
+          labelPlacement="floating"
+          type="text"
+          name="nombre"
+          [(ngModel)]="nombre"
+          required
+          minlength="3"
+          #nombreCtrl="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="nombreCtrl.invalid && nombreCtrl.touched">
+        El nombre es obligatorio (mín. 3 caracteres).
+      </ion-text>
+
+      <ion-item>
+        <ion-input
+          label="Correo Electrónico"
+          labelPlacement="floating"
+          type="email"
+          inputmode="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+          #emailCtrl="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+        Introduzca un email válido.
+      </ion-text>
+
+      <ion-item>
+        <ion-input
+          label="Contraseña"
+          labelPlacement="floating"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          [pattern]="passwordPattern"
+          #passwordCtrl="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
+        Mínimo 8 caracteres, letras y números.
+      </ion-text>
+
+      <ion-item>
+        <ion-input
+          label="Fecha de nacimiento"
+          labelPlacement="floating"
+          type="date"
+          name="fechaNacimiento"
+          [(ngModel)]="fechaNacimiento"
+          required
+          #fechaCtrl="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="fechaCtrl.touched && (fechaCtrl.invalid || fechaEsFutura)">
+        La fecha es obligatoria y no puede ser posterior a hoy.
+      </ion-text>
+
+    </ion-list>
+
+    <div class="ion-padding-top">
+      <ion-button expand="block" type="submit" [disabled]="formularioDriven.invalid || fechaEsFutura">
+        Registrarse
+      </ion-button>
+    </div>
+
+    <ion-text color="success" *ngIf="enviado()">
+      <p class="ion-text-center">Formulario enviado correctamente</p>
+    </ion-text>
+  </form>
+</ion-content>
