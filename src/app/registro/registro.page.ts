@@ -37,10 +37,18 @@ function fechaNoFuturaValidator(control: AbstractControl): ValidationErrors | nu
   return fechaIntroducida > hoy ? { fechaFutura: true } : null;
 }
 
+async function cifrarTexto(texto: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(texto);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-registro',
+  templateUrl: 'registro.page.html',
+  styleUrls: ['registro.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -58,7 +66,7 @@ function fechaNoFuturaValidator(control: AbstractControl): ValidationErrors | nu
     IonIcon
   ]
 })
-export class HomePage {
+export class RegistroPage {
 
   public registroForm: FormGroup;
   public isSubmitting = signal<boolean>(false);
@@ -92,8 +100,15 @@ export class HomePage {
     this.isSubmitting.set(true);
     try {
       const formData = this.registroForm.value;
-      console.log('Payload a enviar a la API REST:', formData);
+      const passwordCifrada = await cifrarTexto(formData.password);
+
+      console.log('Payload a enviar a la API REST:', {
+        ...formData,
+        password: passwordCifrada
+      });
+
       await new Promise(resolve => setTimeout(resolve, 2000));
+
       this.lastSubmission.set(formData);
       this.registroForm.reset();
       this.showToast.set(true);
