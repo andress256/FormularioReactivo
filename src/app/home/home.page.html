@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Registro de Usuario</ion-title>
+    <ion-button slot="end" fill="clear" (click)="toggleDarkMode()">
+      <ion-icon slot="icon-only" [name]="isDarkMode() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -38,15 +41,16 @@
           [errorText]="'Mínimo 8 caracteres, letras y números.'">
         </ion-input>
       </ion-item>
+
       <ion-item>
-  <ion-input
-    label="Fecha de nacimiento"
-    labelPlacement="floating"
-    type="date"
-    formControlName="fechaNacimiento"
-    [errorText]="'La fecha de nacimiento es obligatoria.'">
-  </ion-input>
-</ion-item>
+        <ion-input
+          label="Fecha de nacimiento"
+          labelPlacement="floating"
+          type="date"
+          formControlName="fechaNacimiento"
+          [errorText]="f['fechaNacimiento'].errors?.['fechaFutura'] ? 'La fecha no puede ser posterior a hoy.' : 'La fecha de nacimiento es obligatoria.'">
+        </ion-input>
+      </ion-item>
 
     </ion-list>
 
@@ -55,14 +59,20 @@
         <span *ngIf="!isSubmitting()">Registrarse</span>
         <ion-spinner name="crescent" *ngIf="isSubmitting()"></ion-spinner>
       </ion-button>
+
+      <ion-button expand="block" fill="outline" *ngIf="lastSubmission()" (click)="descargarPdf()">
+        <ion-icon slot="start" name="download-outline"></ion-icon>
+        Descargar datos en PDF
+      </ion-button>
     </div>
   </form>
+
   <ion-toast
-  [isOpen]="showToast()"
-  message="Formulario enviado correctamente"
-  duration="2500"
-  color="success"
-  position="top"
-  (didDismiss)="showToast.set(false)">
-</ion-toast>
+    [isOpen]="showToast()"
+    message="Formulario enviado correctamente"
+    duration="2500"
+    color="success"
+    position="top"
+    (didDismiss)="showToast.set(false)">
+  </ion-toast>
 </ion-content>
