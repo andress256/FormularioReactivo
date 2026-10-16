@@ -57,4 +57,12 @@
       </ion-button>
     </div>
   </form>
+  <ion-toast
+  [isOpen]="showToast()"
+  message="Formulario enviado correctamente"
+  duration="2500"
+  color="success"
+  position="top"
+  (didDismiss)="showToast.set(false)">
+</ion-toast>
 </ion-content>
